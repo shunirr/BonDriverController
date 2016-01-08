@@ -4,27 +4,46 @@ HINSTANCE lib;
 IBonDriver2 *tuner; 
 
 int _tmain(int argc, _TCHAR* argv[]) {
-  if (argc != 4) {
-    printf("Usage: %s <BonDriver> <SpaceID> <ChannelID>\n", argv[0]);
+  switch (argc) {
+  case 2:
+    ShowChannel(argv[1]);
+    break;
+
+  case 4:
+    SetChannel(argv[1], atoi(argv[2]), atoi(argv[3]));
+    break;
+
+  default:
+    printf("ShowChannel: %s <BonDriver>\n", argv[0]);
+    printf("SetChannel: %s <BonDriver> <SpaceID> <ChannelID>\n", argv[0]);
     return 1;
   }
 
-  DWORD dwSpace = atoi(argv[2]);
-  DWORD dwChannel = atoi(argv[3]);
+  return 0;
+}
 
-  if (LoadBonDriver(argv[1])) {
+void SetChannel(LPCTSTR pszFileName, DWORD dwSpace, DWORD dwChannel) {
+  if (LoadBonDriver(pszFileName)) {
     if (OpenTuner()) {
-      printf("Current Space: %d Channel: %d\n", tuner->GetCurSpace(), tuner->GetCurChannel());
       if (tuner->SetChannel(dwSpace, dwChannel)) {
-        printf("Success SetChannel\n");
+        printf("Success\n");
       } else {
-        printf("Failed SetChannel\n");
+        printf("Failed\n");
       }
       CloseTuner();
     }
     UnloadBonDriver();
   }
-  return 0;
+}
+
+void ShowChannel(LPCTSTR pszFileName) {
+  if (LoadBonDriver(pszFileName)) {
+    if (OpenTuner()) {
+      printf("%d %d\n", tuner->GetCurSpace(), tuner->GetCurChannel());
+      CloseTuner();
+    }
+    UnloadBonDriver();
+  }
 }
 
 bool LoadBonDriver(LPCTSTR pszFileName) {

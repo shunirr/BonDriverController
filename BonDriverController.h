@@ -7,6 +7,8 @@
 
 typedef IBonDriver2* (PFCREATEBONDRIVER)(void);
 
+void SetChannel(LPCTSTR pszFileName, DWORD dwSpace, DWORD dwChannel);
+void ShowChannel(LPCTSTR pszFileName);
 bool LoadBonDriver(LPCTSTR pszFileName);
 bool OpenTuner();
 bool CloseTuner();
